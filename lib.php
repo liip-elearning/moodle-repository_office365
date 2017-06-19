@@ -1418,7 +1418,7 @@ class repository_office365 extends \repository {
             $sql = 'SELECT cm.instance
                      FROM {course_modules} cm
                      JOIN {modules} m ON m.id = cm.module
-                    WHERE cm.id = ? AND m.name = "resource"';
+                    WHERE cm.id = ? AND m.name = \'resource\'';
             $rec = $DB->get_record_sql($sql, [$cm->id]);
             if (!empty($rec)) {
                 $resourcerec = $DB->get_record('resource', ['id' => $rec->instance]);
