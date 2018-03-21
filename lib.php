@@ -71,7 +71,7 @@ class repository_office365 extends \repository {
         global $USER;
         $resource = \local_o365\rest\unified::get_resource();
         if ($system === true) {
-            return \local_o365\oauth2\systemtoken::instance(null, $resource, $this->clientdata, $this->httpclient);
+            return \local_o365\utils::get_app_or_system_token($resource, $this->clientdata, $this->httpclient);
         } else {
             $userid = (!empty($userid)) ? $userid : $USER->id;
             return \local_o365\oauth2\token::instance($userid, $resource, $this->clientdata, $this->httpclient);
@@ -89,7 +89,7 @@ class repository_office365 extends \repository {
         global $USER;
         $resource = \local_o365\rest\onedrive::get_resource();
         if ($system === true) {
-            return \local_o365\oauth2\systemtoken::instance(null, $resource, $this->clientdata, $this->httpclient);
+            return \local_o365\utils::get_app_or_system_token($resource, $this->clientdata, $this->httpclient);
         } else {
             $userid = (!empty($userid)) ? $userid : $USER->id;
             return \local_o365\oauth2\token::instance($userid, $resource, $this->clientdata, $this->httpclient);
@@ -107,7 +107,7 @@ class repository_office365 extends \repository {
         global $USER;
         $resource = \local_o365\rest\sharepoint::get_resource();
         if ($system === true) {
-            return \local_o365\oauth2\systemtoken::instance(null, $resource, $this->clientdata, $this->httpclient);
+            return \local_o365\utils::get_app_or_system_token($resource, $this->clientdata, $this->httpclient);
         } else {
             $userid = (!empty($userid)) ? $userid : $USER->id;
             return \local_o365\oauth2\token::instance($userid, $resource, $this->clientdata, $this->httpclient);
@@ -1418,8 +1418,8 @@ class repository_office365 extends \repository {
             $sql = 'SELECT cm.instance
                      FROM {course_modules} cm
                      JOIN {modules} m ON m.id = cm.module
-                    WHERE cm.id = ? AND m.name = \'resource\'';
-            $rec = $DB->get_record_sql($sql, [$cm->id]);
+                    WHERE cm.id = ? AND m.name = ?';
+            $rec = $DB->get_record_sql($sql, [$cm->id, 'resource']);
             if (!empty($rec)) {
                 $resourcerec = $DB->get_record('resource', ['id' => $rec->instance]);
                 if (!empty($resourcerec)) {
